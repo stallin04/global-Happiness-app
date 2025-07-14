@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.express as px
 import seaborn as sns
 import numpy as np
+!pip install plotly
 
 
 # Load your dataset
