@@ -1,12 +1,8 @@
-import plotly as plt
 import streamlit as st
 import plotly.graph_objs as go
-import pandas as pd
 import plotly.express as px
-import seaborn as sns
+import pandas as pd
 import numpy as np
-pip install plotly
-
 
 # Load your dataset
 df = pd.read_excel('cleaned_global_happiness_with_iso.xlsx')  # Adjust path as needed
@@ -85,10 +81,11 @@ def show_country_profile(country):
             st.plotly_chart(fig2)
 
     # Get the flag URL based on the ISO code and display it
-    iso_code = latest['ISO_Code'].values[0]  # Get the ISO code
-    flag_url = get_flag_url(iso_code)  # Fetch the flag URL based on ISO code
-    with col2:
-        st.image(flag_url, width=150)  # Display the flag image
+    if 'ISO_Code' in latest.columns:
+        iso_code = latest['ISO_Code'].values[0]  # Get the ISO code
+        flag_url = get_flag_url(iso_code)  # Fetch the flag URL based on ISO code
+        with col2:
+            st.image(flag_url, width=150)  # Display the flag image
 
     # Display the country's key stats
     with col2:
@@ -102,23 +99,11 @@ show_country_profile(country_dropdown)
 
 # Additional Visualizations:
 ## Global Happiness Distribution (Choropleth map)
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-# Load the dataset
-df = pd.read_excel('cleaned_global_happiness_with_iso.xlsx')  # Adjust path as needed
-
-# Ensure 'Happiness score' is numeric and handle missing values
-df['Happiness score'] = pd.to_numeric(df['Happiness score'], errors='coerce')
-df = df.dropna(subset=['Happiness score', 'Country'])
+st.subheader("Global Happiness Distribution (Selected Country Highlighted)")
 
 # Get the latest year data
 latest_year = df['Year'].max()
 df_latest = df[df['Year'] == latest_year]
-
-# Subheader for Global Happiness Distribution
-st.subheader("Global Happiness Distribution (Selected Country Highlighted)")
 
 # Filter data for the selected country
 selected_country_df = df_latest[df_latest['Country'] == country_dropdown]
@@ -172,19 +157,7 @@ fig_heatmap.update_layout(title='Correlation Heatmap')
 st.plotly_chart(fig_heatmap)
 
 ## Top 10 Happiest Countries Bar Chart
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-df = pd.read_excel('cleaned_global_happiness_with_iso.xlsx')
 st.subheader("Top 10 Happiest Countries")
-
-df['Happiness score'] = pd.to_numeric(df['Happiness score'], errors='coerce')
-df = df.dropna(subset=['Happiness score', 'Country'])
-
-# Get the latest year if there are multiple years
-latest_year = df['Year'].max()
-df_latest = df[df['Year'] == latest_year]
 
 top_10 = df_latest.nlargest(10, 'Happiness score').sort_values('Happiness score', ascending=True)
 
@@ -207,13 +180,8 @@ fig_bar.update_layout(
 
 st.plotly_chart(fig_bar)
 
-
 ## Happiness vs GDP Scatter Plot
 st.subheader("Happiness vs GDP per Capita")
 fig_scatter = px.scatter(df, x='GDP per capita', y='Happiness score', color='Country', hover_name='Country',
                          title="Happiness vs GDP per Capita", color_continuous_scale='Viridis')
 st.plotly_chart(fig_scatter)
-
-
-
-
