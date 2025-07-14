@@ -2,7 +2,6 @@
 Created on Mon July 14 11:11:20 2025
 
 @author: Stallin Ankala
-.........
 
 import streamlit as st
 import pandas as pd
